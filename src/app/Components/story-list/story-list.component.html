@@ -1,0 +1,43 @@
+<div class="container mt-3">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="input-group"><span class="input-group-text"><i class="fa fa-search"></i></span>
+                <input #SearchBox class="form-control" type="text" placeholder="Type Name / Keyword . . ." />
+                <button class="btn btn-success" (click)="Filter(SearchBox.value)"  type="button">Search</button></div>
+                {{Keyword}}
+        </div>
+    </div>
+</div>
+<hr>
+<div class="container mt-3">
+    <div class="alert alert-warning" role="alert"><span><i class="fa fa-exclamation-triangle me-4"></i><strong>No record to display !</strong> ! !</span></div>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <tbody>
+                        <tr *ngFor="let Story of StoriesToDisplay">
+                            <td>
+                                <div id="media-left-aligned-1" class="d-lg-flex align-items-lg-start media mb-2">
+                                    <div class="media-left"><a href="#"><i class="fa fa-paperclip me-3" style="font-size: 49px;color: var(--bs-yellow);"></i></a></div>
+                                    <div class="media-body">
+                                        <h5 class="media-heading"><strong>{{Story.by}}</strong></h5>
+                                        <p style="font-size: 13px;">{{Story.url}}</p>
+                                        <div class="row">
+                                            <div class="col">
+                                                <p style="font-size: 13px;">By - <strong>{{Story.by}}</strong></p>
+                                            </div>
+                                            <div class="col text-end"><button *ngIf="Story.url" class="btn btn-warning" type="button">See more</button></div>
+                                        </div>
+                                    </div>
+                                    <hr />
+                                </div>
+                            </td>
+                        </tr>
+                       
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
