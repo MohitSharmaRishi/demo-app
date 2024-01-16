@@ -1,4 +1,5 @@
-import { ThisReceiver } from '@angular/compiler';
+import { JsonPipe } from '@angular/common';
+import { SelectorMatcher, ThisReceiver } from '@angular/compiler';
 import { Component } from '@angular/core';
 import { NgModel } from '@angular/forms';
 import { StoryModel } from 'src/app/Models/StoryModel';
@@ -11,60 +12,69 @@ import { StoryService } from 'src/app/Services/story.service';
 })
 export class StoryListComponent {
 
-  Stories : StoryModel[]=[];
+  AllStories : StoryModel[]=[];
+  FilteredStories : StoryModel[]=[];
   StoriesToDisplay : StoryModel[]=[];
+
+  tempStories : StoryModel[]=[];
+  
+  
   Keyword:string="";
-  Page:Number=1;
-  NumberOfRecords:Number=1;
-  constructor(private storyService:StoryService) {
-    //this.storyService.Fetch();
-  }
-  Filter(Keyword:string){
-    this.Keyword =Keyword;
-    //console.log(Keyword);return;
-
-
-    if(Keyword=="")this.StoriesToDisplay = (this.storyService.Stories);
-    else { this.StoriesToDisplay = (this.storyService.Stories.filter(x=>x.title.includes(Keyword)));}
+  Page:number=0;
+  NumberOfPages:number=0;
+  constructor(public storyService:StoryService) {
     
-    console.log('Filtered by - '+this.Keyword,this.StoriesToDisplay.length);
+   
+
+   }
+  createRange(number:Number){ return new Array(number).fill(0).map((n, index) => index + 1); }
+
+  
+
+  
+  Filter(Keyword:string){
+    
+    this.Keyword =Keyword;
+//if(this.Keyword !="" && this.Keyword==Keyword)return;
+
+    if(Keyword!=""){
+      this.FilteredStories = JSON.parse(JSON.stringify(this.AllStories.filter(x=>x.title.includes(Keyword)))) ;
+    }
+   else this.FilteredStories = JSON.parse(JSON.stringify(this.AllStories));
+
+    
+     this.NumberOfPages = parseInt((this.FilteredStories.length/10).toString());
+     if(this.FilteredStories.length % 10>0)this.NumberOfPages++;
+     console.log('FilteredStories',this.FilteredStories );
+     console.log('NumberOfPages',this.NumberOfPages );  
+    
+     this.ShowPage(1);
 
   }
-ngOnChanges(){
-  console.log('ngOnChanges ');
-}
-
-ngOnInit(){
   
-  
-}
 
-ngDoCheck(){
-   console.log('ngDoCheck');
-   this.Stories = this.StoriesToDisplay =this.storyService.Stories;
-   this.Filter(this.Keyword);
-}
-ngAfterContentInit(){
-  console.log('ngAfterContentInit');
-}
-ngAfterContentChecked(){
-  console.log('ngAfterContentChecked');
-}
-ngAfterViewInit(){
-  console.log('ngAfterViewInit');
-}
-ngAfterViewChecked(){
-  console.log('ngAfterViewChecked()');
-}
-ngOnDestroy(){
-  console.log('ngOnDestroy()');
-}
+  ShowPage(pageno:number){
 
-async test() {
+    
+    this.Page=pageno;
+    console.log('pageno',pageno);
+    this.StoriesToDisplay =  (JSON.parse(JSON.stringify(this.FilteredStories))).splice((this.Page-1) * 10, 10);
+    //this.StoriesToDisplay =  this.StoriesToDisplay.splice(this.Page*10, 10);
+    
+    console.log('StoriesToDisplay',this.StoriesToDisplay);
+    
+  }
+  Prev(){if(this.Page>1)this.ShowPage(this.Page-1)  }
+  Next(){if(this.Page<this.NumberOfPages)this.ShowPage(this.Page+ 1)  }
   
-  this.StoriesToDisplay=[];
- console.log(this.StoriesToDisplay); 
-  
-}
 
+    async ngOnInit(){
+     var fetch =await  this.storyService.Fetch().then(resp=>{
+      resp.subscribe(x=>{
+        this.AllStories = x;
+        console.log(this.AllStories);
+        this.Filter(this.Keyword);
+      });
+     });
+  }
 }

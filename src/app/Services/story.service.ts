@@ -7,15 +7,12 @@ import { StoryModel } from "../Models/StoryModel";
 })
 export class StoryService {
   Stories:StoryModel[]=[];
-   constructor(private http: HttpClient) { this.Fetch();}
-  Fetch()
+   constructor(private http: HttpClient) { }
+  async Fetch()
     {
       var Url="https://localhost:44369/fetch";
-      const req = this.http.get<StoryModel[]>(Url).subscribe(resp=>{
-      this.Stories=resp;
-      
-      return this.Stories;
-    });
+
+    return await this.http.get<StoryModel[]>(Url);
     }
   }
 
