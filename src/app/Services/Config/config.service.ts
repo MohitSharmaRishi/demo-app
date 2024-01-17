@@ -6,5 +6,6 @@ import { Injectable } from '@angular/core';
 })
 export class ConfigService {
 
+  BaseUrl :string= "https://localhost:44369/"
   constructor() { }
 }
