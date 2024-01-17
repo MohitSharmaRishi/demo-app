@@ -35,7 +35,6 @@ export class StoryListComponent {
   Filter(Keyword:string){
     
     this.Keyword =Keyword;
-//if(this.Keyword !="" && this.Keyword==Keyword)return;
 
     if(Keyword!=""){
       this.FilteredStories = JSON.parse(JSON.stringify(this.AllStories.filter(x=>x.title.includes(Keyword)))) ;
@@ -69,7 +68,7 @@ export class StoryListComponent {
   
 
     async ngOnInit(){
-     var fetch =await  this.storyService.Fetch().then(resp=>{
+     await  this.storyService.Fetch().then(resp=>{
       resp.subscribe(x=>{
         this.AllStories = x;
         console.log(this.AllStories);
