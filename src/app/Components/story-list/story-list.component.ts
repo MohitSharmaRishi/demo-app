@@ -18,15 +18,16 @@ export class StoryListComponent {
 
   tempStories : StoryModel[]=[];
   
+  ShowLoader:boolean=false;
+  DataLoaded:boolean=false;
   
   Keyword:string="";
   Page:number=0;
   NumberOfPages:number=0;
   constructor(public storyService:StoryService) {
     
-   
-
    }
+   SetShowLoader(ShowLoader:boolean){this.ShowLoader=ShowLoader;}
   createRange(number:Number){ return new Array(number).fill(0).map((n, index) => index + 1); }
 
   
@@ -65,13 +66,18 @@ export class StoryListComponent {
   }
   Prev(){if(this.Page>1)this.ShowPage(this.Page-1)  }
   Next(){if(this.Page<this.NumberOfPages)this.ShowPage(this.Page+ 1)  }
-  
+ 
+
 
     async ngOnInit(){
+      
+      this.SetShowLoader(true);
      await  this.storyService.Fetch().then(resp=>{
       resp.subscribe(x=>{
         this.AllStories = x;
         console.log(this.AllStories);
+        this.SetShowLoader(false);
+        this.DataLoaded=true;
         this.Filter(this.Keyword);
       });
      });

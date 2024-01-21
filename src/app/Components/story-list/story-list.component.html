@@ -4,15 +4,18 @@
             <div class="input-group"><span class="input-group-text"><i class="fa fa-search"></i></span>
                 <input #SearchBox class="form-control" type="text" placeholder="Type Name / Keyword . . ." />
                 <button class="btn btn-success" (click)="Filter(SearchBox.value)"  type="button">Search</button></div>
-                
         </div>
     </div>
 </div>
 <hr>
 <div class="container mt-3">
-    <div *ngIf="StoriesToDisplay.length==0" class="alert alert-warning" role="alert"><span><i class="fa fa-exclamation-triangle me-4"></i><strong>No record to display !</strong> ! !</span></div>
+    <div *ngIf="StoriesToDisplay.length==0 && !ShowLoader" class="alert alert-warning" role="alert"><span><i class="fa fa-exclamation-triangle me-4"></i><strong>No record to display !</strong> ! !</span></div>
+    <div class="row">
+        <div class="col text-center" *ngIf="!DataLoaded && ShowLoader"><img src="../../../assets/img/loading.gif" style="width: 101px;" /></div>
+    </div>
     <div  *ngIf="StoriesToDisplay.length>0" class="card shadow-sm">
         <div class="card-body">
+            
             <div class="row">
                 <div class="col">
                     <h5>{{FilteredStories.length}} Results Listed</h5>
